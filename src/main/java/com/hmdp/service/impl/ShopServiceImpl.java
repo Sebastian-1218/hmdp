@@ -8,6 +8,7 @@ import com.hmdp.entity.Shop;
 import com.hmdp.mapper.ShopMapper;
 import com.hmdp.service.IShopService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmdp.utils.RedisData;
 import lombok.SneakyThrows;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
+import java.time.LocalDateTime;
 import java.util.concurrent.TimeUnit;
 
 import static com.hmdp.utils.RedisConstants.CACHE_SHOP_KEY;
@@ -69,6 +71,15 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
 
     private void unlock(String key){
         stringRedisTemplate.delete(key);
+    }
+    public void saveShop2Redis(Long id,Long expiredTime){
+        //1.查询店铺数据
+        RedisData redisData = new RedisData();
+        redisData.setData(redisData);
+        //2.封装逻辑过期时间
+        redisData.setExpireTime(LocalDateTime.now().plusSeconds(expiredTime));
+        //3.写入Redis
+        stringRedisTemplate.opsForValue().set(CACHE_SHOP_KEY+id,JSONUtil.toJsonStr(redisData));
     }
     @Override
     @Transactional(rollbackFor = Exception.class)
