@@ -45,9 +45,9 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     public Result queryById(Long id) {
 //      缓存空值 缓存穿透  Shop shop = queryWithPassThrough(id);
       //  互斥锁解决缓存击穿
-        Shop shop = queryWithMuteThrough(id);
+//        Shop shop = queryWithMuteThrough(id);
         //逻辑过期解决 缓存击穿
-        //Shop shop = queryWithLogicExpire(id);
+        Shop shop = queryWithLogicExpire(id);
         return Result.ok(shop);
     }
     @SneakyThrows
