@@ -2,6 +2,10 @@ package com.hmdp.mapper;
 
 import com.hmdp.entity.Follow;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.hmdp.entity.Voucher;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface FollowMapper extends BaseMapper<Follow> {
 
+    Integer selectIsFollow(Long userFollowId);
 }
