@@ -92,4 +92,11 @@ public class BlogController {
     public Result queryBlogById(@PathVariable("id") Long id){
         return blogService.queryBlogById(id);
     }
+
+    @GetMapping("/of/user")
+    public Result queryBlogByUserId(@RequestParam(value = "current",defaultValue = "1") Integer current, @RequestParam("id") Long id){
+        Page<Blog> blog = blogService.query().eq("user_id", id).page(new Page<>(current, SystemConstants.MAX_PAGE_SIZE));
+        List<Blog> records = blog.getRecords();
+        return Result.ok(records);
+    }
 }

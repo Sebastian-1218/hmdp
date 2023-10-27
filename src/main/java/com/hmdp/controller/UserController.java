@@ -1,6 +1,7 @@
 package com.hmdp.controller;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import com.hmdp.dto.LoginFormDTO;
 import com.hmdp.dto.Result;
 import com.hmdp.dto.UserDTO;
@@ -10,6 +11,7 @@ import com.hmdp.service.IUserInfoService;
 import com.hmdp.service.IUserService;
 import com.hmdp.utils.UserHolder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -87,5 +89,26 @@ public class UserController {
     @GetMapping("/{id}")
     public Result queryById1(@PathVariable("id") Long id){
         User user = userService.getById(id);
+        if(user!=null){
+            UserDTO userDTO = BeanUtil.copyProperties(user, UserDTO.class);
+            return Result.ok(userDTO);
+        }else {
+            return Result.fail("为查询到用户");
+        }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
