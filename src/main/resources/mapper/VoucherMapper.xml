@@ -10,4 +10,7 @@
         LEFT JOIN  tb_seckill_voucher sv ON v.id = sv.voucher_id
         WHERE v.shop_id = #{shopId} AND v.status = 1
     </select>
+    <select id="selectStock" resultType="com.hmdp.entity.SeckillVoucher">
+        select sv.* from tb_seckill_voucher sv,tb_voucher v where v.id=#{id} and sv.voucher_id = v.id
+    </select>
 </mapper>
