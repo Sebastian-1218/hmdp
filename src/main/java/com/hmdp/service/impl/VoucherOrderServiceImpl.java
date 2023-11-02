@@ -9,6 +9,7 @@ import com.hmdp.mapper.VoucherMapper;
 import com.hmdp.mapper.VoucherOrderMapper;
 import com.hmdp.service.IVoucherOrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hmdp.utils.RedisIdWorker;
 import com.hmdp.utils.UserHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +37,8 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
     private VoucherMapper voucherMapper;
     @Resource
     private SeckillVoucherMapper seckillVoucherMapper;
+    @Resource
+    private RedisIdWorker redisIdWorker;
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Boolean test(Long voucherId) throws Exception {
@@ -50,18 +53,16 @@ public class VoucherOrderServiceImpl extends ServiceImpl<VoucherOrderMapper, Vou
         }else {
             throw new Exception("未开始或已结束活动");
         }
-        voucher.setStock(stock--);
-        seckillVoucherMapper.updateById(voucher);
+
+//        seckillVoucherMapper.updateById(voucher);
+        Boolean isUpdate = seckillVoucherMapper.updateAA(voucher.getVoucherId(),voucher.getStock());
         VoucherOrder voucherOrder = new VoucherOrder();
-        voucherOrder.setId(Math.round(Math.random() * 1000000000));
+        long Id = redisIdWorker.nextId("order");
+        voucherOrder.setId(Id);
         voucherOrder.setPayType(1);
         voucherOrder.setUserId(UserHolder.getUser().getId());
         voucherOrder.setVoucherId(voucherId);
         voucherOrder.setStatus(1);
-        if(this.baseMapper.insert(voucherOrder)>0){
-            return true;
-        }else {
-            return false;
-        }
+        return save(voucherOrder) ?true:false;
     }
 }
